@@ -156,3 +156,52 @@ function observeReveal() {
 }
 
 document.addEventListener('DOMContentLoaded', () => { renderProducts(); observeReveal(); }); 
+
+// ===== ANIMACIÓN DEL CURSOR PERSONALIZADO =====
+const cursorDot = document.getElementById('cursorDot');
+const cursorRing = document.getElementById('cursorRing');
+
+if (cursorDot && cursorRing) {
+  let mouseX = 0, mouseY = 0;
+  let ringX = 0, ringY = 0;
+
+  // El punto sigue al mouse instantáneamente
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    cursorDot.style.left = `${mouseX}px`;
+    cursorDot.style.top = `${mouseY}px`;
+  });
+
+  // El anillo sigue al punto con retraso (efecto smooth)
+  function renderCursor() {
+    ringX += (mouseX - ringX) * 0.15; // Velocidad del anillo
+    ringY += (mouseY - ringY) * 0.15;
+    
+    cursorRing.style.left = `${ringX}px`;
+    cursorRing.style.top = `${ringY}px`;
+    
+    requestAnimationFrame(renderCursor);
+  }
+  renderCursor();
+
+  // Activar efecto "hovered" en botones y enlaces
+  const addHoverEvents = () => {
+    const clickables = document.querySelectorAll('a, button, input, select, textarea, .talle-btn, .product-card');
+    clickables.forEach(el => {
+      // Para evitar duplicar eventos si se vuelve a llamar a la función
+      el.removeEventListener('mouseenter', hoverIn);
+      el.removeEventListener('mouseleave', hoverOut);
+      
+      el.addEventListener('mouseenter', hoverIn);
+      el.addEventListener('mouseleave', hoverOut);
+    });
+  };
+
+  const hoverIn = () => cursorRing.classList.add('hovered');
+  const hoverOut = () => cursorRing.classList.remove('hovered');
+
+  // Inicializar eventos y volver a cargarlos si agregas productos dinámicamente
+  addHoverEvents();
+  setTimeout(addHoverEvents, 1000); 
+} 
