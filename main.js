@@ -157,51 +157,58 @@ function observeReveal() {
 
 document.addEventListener('DOMContentLoaded', () => { renderProducts(); observeReveal(); }); 
 
-// ===== ANIMACIÓN DEL CURSOR PERSONALIZADO =====
-const cursorDot = document.getElementById('cursorDot');
-const cursorRing = document.getElementById('cursorRing');
+// ===== ANIMACIÓN DEL CURSOR (VERSIÓN CORREGIDA) =====
+document.addEventListener('DOMContentLoaded', () => {
+  const cursorDot = document.getElementById('cursorDot');
+  const cursorRing = document.getElementById('cursorRing');
 
-if (cursorDot && cursorRing) {
-  let mouseX = 0, mouseY = 0;
-  let ringX = 0, ringY = 0;
-
-  // El punto sigue al mouse instantáneamente
-  document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    cursorDot.style.left = `${mouseX}px`;
-    cursorDot.style.top = `${mouseY}px`;
-  });
-
-  // El anillo sigue al punto con retraso (efecto smooth)
-  function renderCursor() {
-    ringX += (mouseX - ringX) * 0.15; // Velocidad del anillo
-    ringY += (mouseY - ringY) * 0.15;
+  // Verifica que los elementos existan y que no estemos en un celular táctil
+  if (cursorDot && cursorRing && window.matchMedia("(pointer: fine)").matches) {
     
-    cursorRing.style.left = `${ringX}px`;
-    cursorRing.style.top = `${ringY}px`;
+    // Le avisa al CSS que todo salió bien para que oculte el cursor normal
+    document.body.classList.add('custom-cursor-active');
     
-    requestAnimationFrame(renderCursor);
-  }
-  renderCursor();
+    let mouseX = 0, mouseY = 0;
+    let ringX = 0, ringY = 0;
+    let isMoving = false;
 
-  // Activar efecto "hovered" en botones y enlaces
-  const addHoverEvents = () => {
-    const clickables = document.querySelectorAll('a, button, input, select, textarea, .talle-btn, .product-card');
-    clickables.forEach(el => {
-      // Para evitar duplicar eventos si se vuelve a llamar a la función
-      el.removeEventListener('mouseenter', hoverIn);
-      el.removeEventListener('mouseleave', hoverOut);
-      
-      el.addEventListener('mouseenter', hoverIn);
-      el.addEventListener('mouseleave', hoverOut);
+    document.addEventListener('mousemove', (e) => {
+      if (!isMoving) {
+        // Hacemos aparecer el cursor solo cuando empezás a moverlo
+        cursorDot.style.opacity = '1';
+        cursorRing.style.opacity = '1';
+        ringX = e.clientX;
+        ringY = e.clientY;
+        isMoving = true;
+      }
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      cursorDot.style.left = `${mouseX}px`;
+      cursorDot.style.top = `${mouseY}px`;
     });
-  };
 
-  const hoverIn = () => cursorRing.classList.add('hovered');
-  const hoverOut = () => cursorRing.classList.remove('hovered');
+    function renderCursor() {
+      if (isMoving) {
+        ringX += (mouseX - ringX) * 0.15;
+        ringY += (mouseY - ringY) * 0.15;
+        cursorRing.style.left = `${ringX}px`;
+        cursorRing.style.top = `${ringY}px`;
+      }
+      requestAnimationFrame(renderCursor);
+    }
+    renderCursor();
 
-  // Inicializar eventos y volver a cargarlos si agregas productos dinámicamente
-  addHoverEvents();
-  setTimeout(addHoverEvents, 1000); 
-} 
+    // Efecto hover (se agranda el anillo al pasar por botones)
+    const addHoverEvents = () => {
+      const clickables = document.querySelectorAll('a, button, input, select, textarea, .talle-btn, .product-card');
+      clickables.forEach(el => {
+        el.addEventListener('mouseenter', () => cursorRing.classList.add('hovered'));
+        el.addEventListener('mouseleave', () => cursorRing.classList.remove('hovered'));
+      });
+    };
+
+    addHoverEvents();
+    // Por si los productos de la grilla tardan medio segundo más en renderizar
+    setTimeout(addHoverEvents, 1000); 
+  }
+}); 
