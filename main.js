@@ -212,3 +212,61 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(addHoverEvents, 1000); 
   }
 }); 
+
+// ===== SISTEMA DE NOTIFICACIONES DE VENTAS (FOMO) =====
+function initFomoNotifications() {
+  // 1. Creamos el contenedor en el HTML automáticamente
+  const container = document.createElement('div');
+  container.className = 'sales-toast-container';
+  document.body.appendChild(container);
+
+  // 2. Datos falsos para generar el efecto (bien locales)
+  const fakeNames = ['Lucas', 'Martina', 'Facundo', 'Camila', 'Tomás', 'Valentina', 'Joaquín', 'Sofía', 'Mateo', 'Julieta'];
+  const fakeLocations = ['Córdoba', 'Rosario', 'Mendoza', 'Palermo', 'Neuquén', 'Tucumán', 'Mar del Plata', 'CABA', 'La Plata'];
+  
+  function showRandomSale() {
+    // Generamos los datos aleatorios
+    const randomName = fakeNames[Math.floor(Math.random() * fakeNames.length)];
+    const randomLocation = fakeLocations[Math.floor(Math.random() * fakeLocations.length)];
+    // Usa el array de 'products' que ya tenés arriba en tu JS
+    const randomProduct = products[Math.floor(Math.random() * products.length)];
+    const timeAgo = Math.floor(Math.random() * 59) + 1;
+
+    // Creamos la alerta
+    const toast = document.createElement('div');
+    toast.className = 'sales-toast';
+    toast.innerHTML = `
+      <div class="sales-toast-icon">⚡</div>
+      <div class="sales-toast-text">
+        <div><strong>${randomName}</strong> de ${randomLocation} compró:</div>
+        <div style="color: #fff; margin-top: 2px;">${randomProduct.name}</div>
+        <div class="sales-toast-time">Hace ${timeAgo} min</div>
+      </div>
+    `;
+
+    container.appendChild(toast);
+
+    // Animación de entrada (espera un microsegundo para que el CSS haga la transición)
+    setTimeout(() => toast.classList.add('show'), 50);
+
+    // Animación de salida (se queda 5 segundos en pantalla y se borra)
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 500); // Borra el código HTML para no acumular basura
+    }, 5000);
+  }
+
+  // 3. Programamos cuándo salen las notificaciones
+  // La primera sale a los 4 segundos de entrar a la web
+  setTimeout(showRandomSale, 4000);
+
+  // Después, sale una nueva cada cierto tiempo aleatorio (entre 15 y 35 segundos)
+  setInterval(() => {
+    showRandomSale();
+  }, Math.floor(Math.random() * 20000) + 15000);
+}
+
+// Inicializamos el sistema cuando la página termina de cargar
+document.addEventListener('DOMContentLoaded', () => {
+  initFomoNotifications();
+}); 
