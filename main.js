@@ -65,9 +65,16 @@ function addToCart(id) {
   const existing = cart.find(x => x.id === id);
   if (existing) existing.qty++;
   else cart.push({ ...p, qty: 1 });
+  
   updateCartUI();
+  
+  // --- NUEVA MEJORA: Animación del carrito ---
+  const cartBtn = document.getElementById('cartBtn');
+  cartBtn.classList.add('cart-pulse');
+  setTimeout(() => cartBtn.classList.remove('cart-pulse'), 400);
+  
   showToast(`¡${p.name} al carrito!`);
-}
+} 
 
 function updateCartUI() {
   document.getElementById('cartCount').textContent = cart.reduce((a, c) => a + c.qty, 0);
