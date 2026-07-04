@@ -1064,34 +1064,33 @@ body.custom-cursor-active * {
   border-color: var(--blue);
 } 
 
-/* ===== NOTIFICACIONES DE VENTAS (FOMO) ===== */
+/* ===== NOTIFICACIONES FOMO - MODO MINIMALISTA (HUD) ===== */
 .sales-toast-container {
   position: fixed;
   bottom: 20px;
   left: 20px;
-  z-index: 9000; /* Queda por debajo del cursor pero por encima del resto */
+  z-index: 9000;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  pointer-events: none; /* Para que no moleste si pasás el mouse */
+  pointer-events: none;
 }
 
 .sales-toast {
-  background: rgba(10, 15, 28, 0.95);
-  backdrop-filter: blur(5px);
-  border: 1px solid var(--blue);
+  background: rgba(5, 8, 16, 0.8); /* Fondo casi transparente */
+  border: 1px solid rgba(255, 255, 255, 0.05); /* Borde súper sutil */
   color: var(--white);
-  padding: 12px 16px;
-  border-radius: 8px;
+  padding: 10px 14px;
+  border-radius: 4px; /* Bordes rectos, más técnico */
   font-family: var(--font-mono);
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   display: flex;
   align-items: center;
-  gap: 15px;
-  box-shadow: 0 4px 20px rgba(47, 107, 255, 0.15);
-  transform: translateX(-120%);
+  gap: 10px;
+  backdrop-filter: blur(10px);
+  transform: translateX(-20px); /* Entrada suave */
   opacity: 0;
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .sales-toast.show {
@@ -1100,34 +1099,13 @@ body.custom-cursor-active * {
 }
 
 .sales-toast-icon {
-  font-size: 1.5rem;
-  animation: pulseIcon 2s infinite;
-}
-
-.sales-toast-text strong {
+  font-size: 1rem;
   color: var(--blue);
 }
 
-.sales-toast-time {
-  font-size: 0.65rem;
-  color: var(--muted);
-  margin-top: 4px;
+.sales-toast-text strong {
+  color: var(--white);
+  font-weight: 400;
 }
 
-@keyframes pulseIcon {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
-}
-
-/* En celulares lo hacemos un poco más chico y lo subimos para que no tape el botón de WhatsApp */
-@media (max-width: 768px) {
-  .sales-toast-container {
-    bottom: 90px; 
-    left: 10px;
-    right: 10px;
-  }
-  .sales-toast {
-    font-size: 0.75rem;
-  }
-} 
+/* Eliminamos sombras y bordes pesados para que se sienta "limpio" */
