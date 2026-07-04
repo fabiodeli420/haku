@@ -1019,3 +1019,46 @@ h1, h2, h3, h4 {
   .vibe-logo { writing-mode: horizontal-tb; transform: none; font-size: 5rem; }
   .vibe-tags { justify-content: center; }
 }
+
+/* ===== CURSOR PERSONALIZADO ===== */
+/* Solo se activa en computadoras, no en celulares */
+@media (pointer: fine) {
+  body, a, button, input, select, textarea {
+    cursor: none !important;
+  }
+  
+  .cursor-dot {
+    width: 6px;
+    height: 6px;
+    background-color: var(--blue);
+    border-radius: 50%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 999999;
+    transform: translate(-50%, -50%);
+  }
+
+  .cursor-ring {
+    width: 35px;
+    height: 35px;
+    border: 1px solid rgba(47, 107, 255, 0.5); /* Usa tu color azul HAKU */
+    border-radius: 50%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 999998;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s, background-color 0.3s, border-color 0.3s;
+  }
+
+  /* Efecto cuando pasas el mouse por encima de un botón o link */
+  .cursor-ring.hovered {
+    width: 55px;
+    height: 55px;
+    background-color: rgba(47, 107, 255, 0.1);
+    border-color: var(--blue);
+  }
+} 
